@@ -45,7 +45,13 @@ jobs:
       - name: Render 12 reels
         run: node render.mjs "$RDATE"
         working-directory: remotion
+      - name: Save reels so you can download and check them
+        uses: actions/upload-artifact@v4
+        with:
+          name: reels
+          path: out/**/*.mp4
       - name: Upload and publish
+        if: github.event.inputs.dry_run != '1'
         run: python pipeline/publish.py "$RDATE"
       - name: Alert on failure
         if: failure()
